@@ -1,4 +1,4 @@
-# 🍕 Pizza Mais – Sistema de Gerenciamento para Pizzarias
+# 🍕 P3 ENGENHARIA DE SOFTWARE (Pizza Mais – Sistema de Gerenciamento para Pizzarias)
 
 **Repositório:** `p3engsoftware`  
 **Disciplina:** Engenharia de Software (P3)  
