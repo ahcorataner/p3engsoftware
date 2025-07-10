@@ -82,10 +82,18 @@ while True:
     elif opcao == '3':
         data_formatada = datetime.today().strftime('%d-%m-%Y')
         nome_arquivo = f"Relatorio_{data_formatada}.pdf"
+
         dados = RelatorioControler.preparar_dados_relatorio(database.name)
-        sucesso = PDF.gerar_pdf(nome_arquivo, dados["pedidos"], dados["faturamento_total"])
+
+        # 🔍 Verificação antes de gerar o PDF
+        print("\n📊 Faturamento Total recebido:", dados["faturamento_total"])
+        print("📋 Número de pedidos no relatório:", len(dados["pedidos"]))
+        for pedido in dados["pedidos"]:
+            print(f"→ Pedido #{pedido['id']} | Data: {pedido['data']} | Valor: R$ {pedido['valor']}")
+
+        sucesso = PDF.gerar_pdf(nome_arquivo, dados["pedidos"], float(dados["faturamento_total"]))
         if sucesso:
-            print(f"✅ Relatório gerado com sucesso: {nome_arquivo}")
+            print(f"\n✅ Relatório gerado com sucesso: {nome_arquivo}")
             try:
                 os.startfile(nome_arquivo)  # Abre o PDF automaticamente no Windows
             except Exception:
