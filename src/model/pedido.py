@@ -1,3 +1,5 @@
+# Manutenção: Cícero Tasso - revisão em 10/07/2025
+
 from sqlite3 import Error
 from model.database import Database
 
