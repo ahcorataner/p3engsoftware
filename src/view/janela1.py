@@ -1,94 +1,82 @@
-#para pegar a data de hoje
 from datetime import date
 import time
-
-#Necessário para realizar import em python
-import sys
-from pathlib import Path
-file = Path(__file__).resolve()
-parent, root = file.parent, file.parents[1]
-sys.path.append(str(root))
-
-#importando os módulos de model
-from model.pedido import Pedido
-
-#importando os módulos de controle
 from controler.pedidoControler import PedidoControler
 from controler.itemControler import ItemControler
+from model.pedido import Pedido
 
-#criação da classe janela
 class Janela1:
-    
     @staticmethod
     def mostrar_janela1(database_name: str) -> None:
-        """
-        View para o usuário utilizar o software
-        
-        return None
-        """
-        
-        a = 'y'
-        
-        menu = ItemControler.mostrar_itens_menu(database_name)
-        
-        print('----------Menu----------\n')
-        print(f'{menu} \n')
-        while a=='y':
-            lista_itens = []
-            valor_total=0
-            
-            a = str(input('Cadastrar pedido (y-Sim, n-Nao): '))
-            
-            if a=='y':
-                print('----------Cadastrar pedido----------\n')
-                adicionar = 'y'
-                pedidos = PedidoControler.search_in_pedidos_all(database_name)
-                numero_pedido = len(pedidos)+1
-                while adicionar == 'y':
-                    item = int(input('Numero do item: '))
-                    quantidade = int(input('Quantidade: '))
-                    
-                    #calculando em tempo de execução o valor do pedido
-                    a = ItemControler.valor_item(database_name, item)
-                    b = a[0][0]*quantidade
-                    print(b)
-                    valor_total+=b
-                    
-                    for x in range(0,quantidade):#acrescentado o mesmo item várias vezes, de acordo com a quantidade
-                        lista_itens.append((numero_pedido,item))
-                    
-                    adicionar = str(input('Adicionar novo item? (y-Sim, n-Nao): '))
-                
-                print('\n----------Finalizar pedido----------\n')
-                print(f'Numero do pedido: {numero_pedido}')
-                delivery = str(input('Delivery (S/N): ')).lower()
-                if delivery=='s':
-                    delivery = True
-                elif delivery=='n':
-                    delivery = False
-                else:
-                    print('Valor incorreto, recomeçando')
-                    break
-                endereco = str(input('Endereco:'))
-                status_aux = int(input('status: 1-preparo, 2-pronto, 3-entregue: '))
-                if status_aux == 1:
-                    status = 'preparo'
-                if status_aux == 2:
-                    status = 'pronto'
-                else:
-                    status = 'entregue'
- 
-                print(f'Valor Final: R${valor_total}')
-                data_hoje = date.today()
-                data_formatada = data_hoje.strftime('%d/%m/%Y')
-                print(data_formatada)
-                print(endereco)
-                pedido = Pedido(status, str(delivery), endereco,data_formatada,float(valor_total))
-                PedidoControler.insert_into_pedidos(database_name,pedido)
-                for elem in lista_itens:
-                    ItemControler.insert_into_itens_pedidos(database_name,elem)
-                
-            elif a=='n':
-                print('Voltando ao Menu inicial')
-                time.sleep(2)
+        while True:
+            menu = ItemControler.mostrar_itens_menu(database_name)
+
+            if not menu:
+                print("⚠️ Menu vazio. Cadastre itens antes de fazer pedidos.")
                 break
+
+            print("\n---------- Menu Disponível ----------")
+            print("ID | Nome         | Tipo        | Preço   | Descrição")
+            print("---|--------------|-------------|---------|-------------------------------")
+            for item in menu:
+                print(f"{item[0]:<3}| {item[1]:<12} | {item[3]:<11} | R${item[2]:<7.2f} | {item[4]}")
+
+            a = input('\nDeseja cadastrar pedido? (y/n): ').strip().lower()
+            if a != 'y':
+                print('↩️ Retornando ao menu principal...')
+                time.sleep(1)
+                break
+
+            lista_itens = []
+            valor_total = 0.0
+            pedidos = PedidoControler.search_in_pedidos_all(database_name)
+            numero_pedido = len(pedidos) + 1
+
+            while True:
+                try:
+                    item = int(input('Informe o ID do item: '))
+                    quantidade = int(input('Quantidade: '))
+                    preco_info = ItemControler.valor_item(database_name, item)
+                    if not preco_info or isinstance(preco_info, str):
+                        print("❌ Item inválido. Tente novamente.")
+                        continue
+
+                    valor_unitario = preco_info[0][0]
+                    valor_total += valor_unitario * quantidade
+                    lista_itens += [(numero_pedido, item)] * quantidade
+                except ValueError:
+                    print("❌ Entrada inválida. Use números.")
+                    continue
+
+                adicionar = input('Adicionar mais itens? (y/n): ').strip().lower()
+                if adicionar != 'y':
+                    break
+
+            delivery_input = input("É delivery? (S/N): ").strip().lower()
+            if delivery_input not in ['s', 'n']:
+                print("❌ Entrada inválida para delivery.")
+                continue
+            delivery_flag = delivery_input == 's'
+
+            endereco = input("Endereço: ").strip()
+
+            try:
+                status_aux = int(input('Status: 1-preparo | 2-pronto | 3-entregue: '))
+                status_map = {1: "preparo", 2: "pronto", 3: "entregue"}
+                status = status_map.get(status_aux)
+                if not status:
+                    print("❌ Status inválido. Tente novamente.")
+                    continue
+            except ValueError:
+                print("❌ Entrada inválida para status.")
+                continue
+
+            data_formatada = date.today().strftime('%d/%m/%Y')
+            pedido = Pedido(status, delivery_flag, endereco, data_formatada, float(valor_total))
+            PedidoControler.insert_into_pedidos(database_name, pedido)
+
+            for item_pedido in lista_itens:
+                ItemControler.insert_into_itens_pedidos(database_name, item_pedido)
+
+            print(f"\n✅ Pedido #{numero_pedido} cadastrado com sucesso!")
+            print(f"Total: R$ {valor_total:.2f}")
+            print("----------------------------------------")

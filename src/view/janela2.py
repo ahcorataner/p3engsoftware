@@ -1,73 +1,63 @@
-#Necessário para realizar import em python
-import sys
-from pathlib import Path
-file = Path(__file__).resolve()
-parent, root = file.parent, file.parents[1]
-sys.path.append(str(root))
-
 from controler.pedidoControler import PedidoControler
 from controler.itemControler import ItemControler
 
 class Janela2:
-    def mostrar_janela2(database_name:str):
-        faturamento = 0
-        print('------Pesquisar Pedido--------')
-        q = int(input('Unico-1\nTodos-2\nAtualizar Estado-3\nDigite: '))
-        if q==1:
-            indice = int(input('Indice do pedido: '))
-            resume = ItemControler.search_into_itens_pedidos_id(database_name, indice)
-            informacoes_pedido = PedidoControler.search_in_pedidos_id(database_name,indice)[0]
-            quantidade_itens = len(resume)
-            exibir_tela = ''
-            for elem in resume:
-                exibir_tela+=f'Tipo: {elem[2]}| Sabor: {elem[0]}| Descricao: {elem[3]}| R$ {elem[1]}|\n'
-            print(f'\nResumo do pedido {indice}: \n {exibir_tela}\nItens: {quantidade_itens}\n\n')
-            if len(informacoes_pedido)>0:
-                print(f'Status: {informacoes_pedido[1]}\nDelivery: {informacoes_pedido[2]}\nEndereco: {informacoes_pedido[3]}\nData: {informacoes_pedido[4]}\nR$ {informacoes_pedido[5]}')
-            print('Voltando ao menu inicial\n')
-            
-        elif q==2:
-            row = PedidoControler.search_in_pedidos_all(database_name)            
-            faturamento = 0
-            exibir_tela = ''
-            endereco =''
-            i=1
-            for elem in row:
-                endereco_raw = elem.endereco
-                if isinstance(endereco_raw, (tuple, list)):
-                    endereco_raw = endereco_raw[0]
-                faturamento+=elem.valor_total
-                endereco = endereco_raw or 'Nao informado'
-                exibir_tela+= f'Nº: {i}| Estado: {elem.status}| Delivery: {elem.delivery}| Endereco: {endereco}| Valor: R$ {elem.valor_total} \n'
-                i+=1
-            print(f'\nPedidos \n\n{exibir_tela}')
-            print(f'Faturamento R$ {faturamento}')
-        
-        elif q=='3':
-            indice = int(input('Indice do pedido: '))
-            resume = ItemControler.search_into_itens_pedidos_id(database_name, indice)
-            quantidade_itens = len(resume)
-            exibir_tela = ''
-            if quantidade_itens>0:
-                informacoes_pedido = PedidoControler.search_in_pedidos_id(database_name,indice)[0]
+    @staticmethod
+    def mostrar_janela2(database_name: str):
+        print("\n------ Consulta e Atualização de Pedido ------")
+        print("1 - Consultar pedido por ID")
+        print("2 - Listar todos os pedidos + faturamento")
+        print("3 - Atualizar status de pedido")
+        try:
+            escolha = int(input("→ Digite o número da opção desejada: ").strip())
+        except ValueError:
+            print("❌ Entrada inválida.")
+            return
 
-                for elem in resume:
-                    exibir_tela+=f'Tipo: {elem[2]}| Sabor: {elem[0]}| Descricao: {elem[3]}| R$ {elem[1]}|\n'
-                print(f'\nResumo do pedido {indice}: \n {exibir_tela}\nItens: {quantidade_itens}\n')
-                print('Informações do Pedido\n')
-                print(f'Status: {informacoes_pedido[1]}\nDelivery: {informacoes_pedido[2]}\nEndereco: {informacoes_pedido[3]}\nData: {informacoes_pedido[4]}\nR$ {informacoes_pedido[5]}')
-                novo_status = int(input('preparo - 1 | pronto - 2 | entregue - 3: '))
-                if novo_status/novo_status != 1:
-                    print('Entrada inválida, retornando')
-                else:
-                    result = PedidoControler.update_pedido_status_id(database_name, indice, novo_status)
-                    if result:
-                        print(f'Status do Pedido {indice} atualizado com sucesso')
-                    else:
-                        print('Erro ao atualizar')
-            else:
-                print('Indice inválido')    
+        if escolha == 1:
+            try:
+                indice = int(input("🔍 Digite o ID do pedido: "))
+                pedido_info = PedidoControler.search_in_pedidos_id(database_name, indice)
+                if not pedido_info or isinstance(pedido_info, str):
+                    print("❌ Pedido não encontrado.")
+                    return
+                itens = ItemControler.search_into_itens_pedidos_id(database_name, indice)
+                print(f"\nResumo do Pedido #{indice}:")
+                for item in itens:
+                    print(f"  - Tipo: {item[2]} | Sabor: {item[0]} | Descrição: {item[3]} | R$ {item[1]:.2f}")
+                print(f"\n🧾 Total de itens: {len(itens)}")
+                print(f"📌 Status: {pedido_info[0][1]}")
+                print(f"📦 Delivery: {pedido_info[0][2]}")
+                print(f"🏠 Endereço: {pedido_info[0][3]}")
+                print(f"📅 Data: {pedido_info[0][4]}")
+                print(f"💰 Valor: R$ {pedido_info[0][5]:.2f}")
+            except Exception:
+                print("❌ Erro ao carregar pedido.")
+
+        elif escolha == 2:
+            pedidos = PedidoControler.search_in_pedidos_all(database_name)
+            faturamento = 0
+            print("\n📄 Lista de Pedidos:")
+            for i, pedido in enumerate(pedidos, start=1):
+                endereco = pedido.endereco or "Não informado"
+                print(f"{i} - Status: {pedido.status} | Delivery: {pedido.delivery} | Endereço: {endereco} | R$ {pedido.valor_total:.2f}")
+                faturamento += pedido.valor_total
+            print(f"\n💸 Faturamento total: R$ {faturamento:.2f}")
+
+        elif escolha == 3:
+            try:
+                indice = int(input("📍 Digite o ID do pedido para atualizar: "))
+                pedido_info = PedidoControler.search_in_pedidos_id(database_name, indice)
+                if not pedido_info:
+                    print("❌ Pedido não encontrado.")
+                    return
+                novo_status = int(input("Escolha novo status: 1-preparo | 2-pronto | 3-entregue: "))
+                if novo_status not in [1, 2, 3]:
+                    print("❌ Status inválido.")
+                    return
+                atualizado = PedidoControler.update_pedido_status_id(database_name, indice, novo_status)
+                print("✅ Status atualizado com sucesso!" if atualizado else "❌ Falha ao atualizar.")
+            except ValueError:
+                print("❌ Entrada inválida.")
         else:
-            print('Entrada inválida, retornando')
-            
-       
+            print("⚠️ Opção não reconhecida.")
