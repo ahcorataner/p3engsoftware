@@ -1,3 +1,5 @@
+# Manutenção: Weslly Silveira - tarefa concluída em 11/07/2025
+
 from model.item import Item
 
 class ItemControler:
