@@ -1,3 +1,5 @@
+# 🧑‍🔧 Manutenção realizada por Weslly Silveira em 12/07/2025: ajustes na lógica de pedidos e validação de entradas
+
 from datetime import date
 import time
 from controler.pedidoControler import PedidoControler
