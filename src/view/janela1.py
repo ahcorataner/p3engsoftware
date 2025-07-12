@@ -15,17 +15,16 @@ class Janela1:
                 break
 
             print("\n---------- Menu Disponível ----------")
-            print("ID | Nome         | Tipo        | Preço   | Descrição")
-            print("---|--------------|-------------|---------|-------------------------------")
+            print("ID | Nome         | Tipo        | Preço     | Descrição")
+            print("---|--------------|-------------|-----------|-------------------------------")
             for item in menu:
                 print(f"{item[0]:<3}| {item[1]:<12} | {item[3]:<11} | R${item[2]:<7.2f} | {item[4]}")
 
-            a = input('\nDeseja cadastrar pedido? (y/n): ').strip().lower()
-            if a != 'y':
+            a = input('\nDeseja cadastrar pedido? (s/n): ').strip().lower()
+            if a != 's':
                 print('↩️ Retornando ao menu principal...')
                 time.sleep(1)
-                break
-
+                break      
             lista_itens = []
             valor_total = 0.0
             pedidos = PedidoControler.search_in_pedidos_all(database_name)
@@ -47,8 +46,8 @@ class Janela1:
                     print("❌ Entrada inválida. Use números.")
                     continue
 
-                adicionar = input('Adicionar mais itens? (y/n): ').strip().lower()
-                if adicionar != 'y':
+                adicionar = input('Adicionar mais itens? (s/n): ').strip().lower()
+                if adicionar != 's':
                     break
 
             delivery_input = input("É delivery? (S/N): ").strip().lower()
