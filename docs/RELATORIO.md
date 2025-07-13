@@ -59,6 +59,20 @@ Os relatos foram organizados em três momentos distintos:
 
 ---
 
+## 🗂️ Apêndice Técnico – Histórico de Manutenções
+
+| Nº | Descrição do Problema ou Solicitação                                                     | Tipo de Manutenção | Ação Esperada                                                                 |
+|----|-------------------------------------------------------------------------------------------|---------------------|-------------------------------------------------------------------------------|
+| 1  | Melhorar o layout do menu principal para torná-lo mais claro, organizado e acessível     | Perfectiva          | Reformular a interface do menu com espaçamento, ícones e texto mais amigável |
+| 2  | Entrada para confirmar o cadastro de novo pedido não funciona em alguns casos            | Corretiva           | Corrigir o fluxo de validação para confirmar pedidos com entrada segura       |
+| 3  | Ao adicionar novo item ao pedido, a confirmação falha ocasionalmente                     | Corretiva           | Revisar a lógica de confirmação de itens e garantir correta associação        |
+| 4  | Faturamento não aparece corretamente no relatório PDF, mesmo com pedidos válidos         | Corretiva           | Ajustar cálculo e formatação de valores na geração do PDF                     |
+| 5  | O sistema não apresenta nenhuma resposta ao cadastrar pedido (y-Sim, n-Nao)              | Corretiva           | Implementar validações e mensagens de erro interativas ao usuário            |
+| 6  | Ao tentar atualizar o status de um pedido, nenhuma ação ocorre                           | Corretiva           | Corrigir o método de atualização e assegurar feedback visível ao usuário     |
+| 7  | Cliente solicita a criação de uma nova tela para cadastrar novos itens no menu           | Adaptativa          | Implementar uma nova view conectada aos models e controllers de itens        |
+
+---
+
 ## 🔍 Estratégia de Correção
 
 Cada problema foi analisado individualmente, com foco em:
