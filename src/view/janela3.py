@@ -1,3 +1,5 @@
+# Manutenção: Cícero Tasso - Validação aprimorada em 13/07/2025
+
 from controler.itemControler import ItemControler
 
 class Janela3:
