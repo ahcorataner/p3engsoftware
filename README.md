@@ -158,5 +158,3 @@ Este projeto é parte de um desafio acadêmico e **não possui fins comerciais**
 Desenvolvido por: **Renata Rocha**  
 GitHub: [@ahcorataner](https://github.com/ahcorataner)
 ```
-
-
