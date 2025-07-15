@@ -5,7 +5,7 @@
 **Disciplina:** Engenharia de Software (P3)  
 **Curso:** Engenharia da Computação  
 **Instituição:** Universidade Federal do Maranhão (UFMA)  
-**Desenvolvido por:** Renata Rocha  
+**Desenvolvido por:** Cícero Tasso Rego Neto, Luis Felipe Oliveira Paiva, Renata Costa Rocha, Weslly Silveira Braga 
 **Versão do Python:** `3.10.9`  
 
 > _"Seus sonhos têm formato e borda."_
@@ -155,6 +155,6 @@ Este projeto é parte de um desafio acadêmico e **não possui fins comerciais**
 
 ## 🤝 Contato
 
-Desenvolvido por: **Renata Rocha**  
+Desenvolvido por: **Cícero Tasso Rego Neto, Luis Felipe Oliveira Paiva, Renata Costa Rocha, Weslly Silveira Braga**  
 GitHub: [@ahcorataner](https://github.com/ahcorataner)
 ```
