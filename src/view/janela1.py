@@ -25,6 +25,7 @@ class Janela1:
                 print('↩️ Retornando ao menu principal...')
                 time.sleep(1)
                 break      
+
             lista_itens = []
             valor_total = 0.0
             pedidos = PedidoControler.search_in_pedidos_all(database_name)
