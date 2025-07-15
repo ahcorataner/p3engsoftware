@@ -1,3 +1,5 @@
+# 🛠️ Manutenção técnica por Luis Felipe Paiva em 15/07/2025: melhorias na lógica de consulta e atualização de pedidos
+
 from controler.pedidoControler import PedidoControler
 from controler.itemControler import ItemControler
 
