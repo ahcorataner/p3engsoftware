@@ -2,9 +2,9 @@ import sys
 import time
 from pathlib import Path
 from datetime import datetime
-import os  # Para abrir o relatório automaticamente no Windows
+import os
 
-# Ajuste para permitir importações de subpastas
+# Permitir importações locais
 file = Path(__file__).resolve()
 parent, root = file.parent, file.parents[1]
 sys.path.append(str(root))
@@ -28,50 +28,49 @@ from view.janela3 import Janela3
 # REPORT
 from report.pdf import PDF
 
-# Inicializa banco e tabelas
+# Inicia banco
 database = Database('TESTE.db')
 cursor = DatabaseControler.conect_database(database.name)
 
+# Cria tabelas
 DatabaseControler.create_table_itens(cursor)
 DatabaseControler.create_table_pedidos(cursor)
 DatabaseControler.create_table_itens_pedidos(cursor)
 
-# Cadastro automático de itens se o menu estiver vazio
+# Verifica se há itens no menu
 menu_existente = ItemControler.mostrar_itens_menu(database.name)
 if not menu_existente:
-    print("📦 Carregando itens iniciais no menu...")
-    item1 = Item('Calabresa', 35.5, 'Pizza', 'Fatias de calabresa, molho de tomate, queijo')
-    item2 = Item('Mussarela', 30.0, 'Pizza', 'Muito queijo e molho')
-    item3 = Item('Frango', 32.0, 'Pizza', 'Frango desfiado, catupiry e milho')
-    item4 = Item('Refrigerante', 8.0, 'Bebida', 'Lata 350ml')
-    item5 = Item('Brownie', 12.5, 'Sobremesa', 'Brownie de chocolate com calda quente')
-
-    ItemControler.insert_into_item(database.name, item1)
-    ItemControler.insert_into_item(database.name, item2)
-    ItemControler.insert_into_item(database.name, item3)
-    ItemControler.insert_into_item(database.name, item4)
-    ItemControler.insert_into_item(database.name, item5)
+    print("📦 Carregando itens padrão no cardápio...")
+    itens_padrao = [
+        Item('Calabresa', 35.5, 'Pizza', 'Fatias de calabresa, molho de tomate, queijo'),
+        Item('Mussarela', 30.0, 'Pizza', 'Muito queijo e molho'),
+        Item('Frango', 32.0, 'Pizza', 'Frango desfiado, catupiry e milho'),
+        Item('Refrigerante', 8.0, 'Bebida', 'Lata 350ml'),
+        Item('Brownie', 12.5, 'Sobremesa', 'Brownie de chocolate com calda quente')
+    ]
+    for item in itens_padrao:
+        ItemControler.insert_into_item(database.name, item)
     print("✅ Cardápio carregado com sucesso!\n")
 
-# Interface do sistema
+# Interface de boas-vindas
 print('''
-                Bem-vindo ao software Pizza Mais
-                        -Criando Sonhos-
+                🍕 Bem-vindo ao sistema Pizza Mais 🍕
+                     - Criando Sonhos -
                 Estabelecimento: Pizza Ciclano
-                "Seus sonhos têm formato e borda"
-                ---------------------------------
+           "Seus sonhos têm formato e borda!"
+                -----------------------------
             ''')
 
-# Menu principal
+# Menu principal com opções em português
 while True:
     print('''
-    1 - Cadastrar Pedido
-    2 - Consultar/Atualizar Pedido
-    3 - Gerar Relatório em PDF
-    4 - Cadastrar Itens no Menu
-    5 - Encerrar
+    🍽️  1 - Cadastrar novo pedido
+    🔍 2 - Consultar ou atualizar pedido
+    📄 3 - Gerar relatório em PDF
+    🆕 4 - Cadastrar novos itens no cardápio
+    ❌ 5 - Encerrar o sistema
     ''')
-    opcao = input('Digite sua opção: ').strip()
+    opcao = input('👉 Digite sua opção: ').strip()
 
     if opcao == '1':
         Janela1.mostrar_janela1(database.name)
@@ -85,9 +84,8 @@ while True:
 
         dados = RelatorioControler.preparar_dados_relatorio(database.name)
 
-        # 🔍 Verificação antes de gerar o PDF
-        print("\n📊 Faturamento Total recebido:", dados["faturamento_total"])
-        print("📋 Número de pedidos no relatório:", len(dados["pedidos"]))
+        print("\n📊 Faturamento total:", dados["faturamento_total"])
+        print("📋 Quantidade de pedidos:", len(dados["pedidos"]))
         for pedido in dados["pedidos"]:
             print(f"→ Pedido #{pedido['id']} | Data: {pedido['data']} | Valor: R$ {pedido['valor']}")
 
@@ -95,18 +93,24 @@ while True:
         if sucesso:
             print(f"\n✅ Relatório gerado com sucesso: {nome_arquivo}")
             try:
-                os.startfile(nome_arquivo)  # Abre o PDF automaticamente no Windows
+                os.startfile(nome_arquivo)
             except Exception:
-                print("📂 Abra o relatório manualmente na pasta do projeto.")
+                print("📂 Relatório salvo na pasta do projeto. Abra manualmente.")
         else:
-            print("❌ Erro ao gerar o relatório.")
+            print("❌ Houve um erro ao gerar o relatório.")
 
     elif opcao == '4':
         Janela3.mostrar_janela3(database.name)
 
     elif opcao == '5':
-        print("👋 Encerrando o sistema. Até a próxima!")
-        break
+        confirma = input("Deseja realmente encerrar o sistema? (s/n): ").strip().lower()
+        if confirma == 's':
+            print("👋 Sistema encerrado. Até a próxima!")
+            break
+        elif confirma == 'n':
+            print("🔁 Voltando ao menu principal...")
+        else:
+            print("⚠️ Entrada inválida. Digite 's' para sim ou 'n' para não.")
 
     else:
         print("⚠️ Opção inválida. Tente novamente.")

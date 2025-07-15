@@ -11,17 +11,17 @@ class Janela1:
             menu = ItemControler.mostrar_itens_menu(database_name)
 
             if not menu:
-                print("⚠️ Menu vazio. Cadastre itens antes de fazer pedidos.")
+                print("⚠️ O cardápio está vazio. Cadastre itens antes de realizar pedidos.")
                 break
 
-            print("\n---------- Menu Disponível ----------")
+            print("\n🍽️ ---------- Cardápio Disponível ----------")
             print("ID | Nome         | Tipo        | Preço   | Descrição")
             print("---|--------------|-------------|---------|-------------------------------")
             for item in menu:
                 print(f"{item[0]:<3}| {item[1]:<12} | {item[3]:<11} | R${item[2]:<7.2f} | {item[4]}")
 
-            a = input('\nDeseja cadastrar pedido? (y/n): ').strip().lower()
-            if a != 'y':
+            a = input('\nDeseja cadastrar um novo pedido? (s/n): ').strip().lower()
+            if a != 's':
                 print('↩️ Retornando ao menu principal...')
                 time.sleep(1)
                 break
@@ -44,30 +44,30 @@ class Janela1:
                     valor_total += valor_unitario * quantidade
                     lista_itens += [(numero_pedido, item)] * quantidade
                 except ValueError:
-                    print("❌ Entrada inválida. Use números.")
+                    print("❌ Entrada inválida. Digite apenas números.")
                     continue
 
-                adicionar = input('Adicionar mais itens? (y/n): ').strip().lower()
-                if adicionar != 'y':
+                adicionar = input('Deseja adicionar mais itens? (s/n): ').strip().lower()
+                if adicionar != 's':
                     break
 
-            delivery_input = input("É delivery? (S/N): ").strip().lower()
+            delivery_input = input("O pedido é para delivery? (s/n): ").strip().lower()
             if delivery_input not in ['s', 'n']:
-                print("❌ Entrada inválida para delivery.")
+                print("❌ Entrada inválida. Digite 's' para sim ou 'n' para não.")
                 continue
             delivery_flag = delivery_input == 's'
 
-            endereco = input("Endereço: ").strip()
+            endereco = input("Informe o endereço de entrega: ").strip()
 
             try:
-                status_aux = int(input('Status: 1-preparo | 2-pronto | 3-entregue: '))
+                status_aux = int(input('Informe o status do pedido:\n1 - Em preparo\n2 - Pronto\n3 - Entregue\nEscolha: '))
                 status_map = {1: "preparo", 2: "pronto", 3: "entregue"}
                 status = status_map.get(status_aux)
                 if not status:
-                    print("❌ Status inválido. Tente novamente.")
+                    print("❌ Opção de status inválida. Tente novamente.")
                     continue
             except ValueError:
-                print("❌ Entrada inválida para status.")
+                print("❌ Entrada inválida. Digite um número de 1 a 3.")
                 continue
 
             data_formatada = date.today().strftime('%d/%m/%Y')
@@ -78,5 +78,5 @@ class Janela1:
                 ItemControler.insert_into_itens_pedidos(database_name, item_pedido)
 
             print(f"\n✅ Pedido #{numero_pedido} cadastrado com sucesso!")
-            print(f"Total: R$ {valor_total:.2f}")
-            print("----------------------------------------")
+            print(f"🧾 Valor total: R$ {valor_total:.2f}")
+            print("----------------------------------------------------")
