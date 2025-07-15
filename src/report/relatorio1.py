@@ -1,3 +1,5 @@
+# 🧠 Manutenção técnica por Luis Felipe Paiva em 15/07/2025: ajustes nas validações, consistência dos dados e relatório
+
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import A4
 from reportlab.lib import colors
