@@ -1,12 +1,17 @@
-
 # 🍕 P3 Engenharia de Software — *Pizza Mais*  
 **Sistema de Gerenciamento para Pizzarias**  
 
 **Disciplina:** Engenharia de Software (P3)  
 **Curso:** Engenharia da Computação  
 **Instituição:** Universidade Federal do Maranhão (UFMA)  
-**Desenvolvido por:** Cícero Tasso Rego Neto, Luis Felipe Oliveira Paiva, Renata Costa Rocha, Weslly Silveira Braga 
-**Versão do Python:** `3.10.9`  
+
+**Desenvolvido por:**  
+- Cícero Tasso Rego Neto  
+- Luis Felipe Oliveira Paiva  
+- Renata Costa Rocha  
+- Weslly Silveira Braga  
+
+**Versão do Python:** `3.10.9`
 
 > _"Seus sonhos têm formato e borda."_
 
